@@ -26,3 +26,8 @@ class Brain:
 
     def ask(self, text: str) -> str:
         return self.chat.send_message(text).text
+
+    def ask_audio(self, wav_bytes: bytes) -> str:
+        part = types.Part.from_bytes(data=wav_bytes, mime_type="audio/wav")
+        prompt = "The user is speaking to you in this audio. Reply to them."
+        return self.chat.send_message([part, prompt]).text
