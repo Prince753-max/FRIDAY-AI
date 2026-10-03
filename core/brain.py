@@ -4,6 +4,7 @@ from google import genai
 from google.genai import types
 from tools.basic import get_time, calculate
 from tools.gcal import list_events, create_event
+from tools.gmail_tool import list_recent_emails, create_draft_reply
 
 load_dotenv()
 
@@ -13,7 +14,9 @@ SYSTEM_PROMPT = (
     "Use your tools whenever they give a more accurate answer. "
     "Before creating or changing anything (events, emails), state the exact "
     "details and ask the user to confirm. Only call the tool after they say yes. "
-    "Use get_time to work out dates like 'tomorrow'."
+    "Use get_time to work out dates like 'tomorrow'. "
+    "You can only draft emails, never send them directly; always tell the user "
+    "to review and send the draft themselves."
 )
 
 
@@ -24,7 +27,7 @@ class Brain:
             model=MODEL,
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
-                tools=[get_time, calculate, list_events, create_event],
+                tools=[get_time, calculate, list_events, create_event, list_recent_emails, create_draft_reply],
             ),
         )
 
@@ -35,3 +38,4 @@ class Brain:
         part = types.Part.from_bytes(data=wav_bytes, mime_type="audio/wav")
         prompt = "The user is speaking to you in this audio. Reply to them."
         return self.chat.send_message([part, prompt]).text
+    

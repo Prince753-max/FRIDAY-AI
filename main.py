@@ -1,25 +1,19 @@
 from core.brain import Brain
 from voice.ears import record
 from voice.mouth import speak
+from voice.wake import listen_for_wake_word
 
 
 def main():
     brain = Brain()
-    print("FRIDAY online. Press Enter to talk, or type a message. 'exit' to quit.")
+    print("FRIDAY is running in the background. Say 'Hey Jarvis' to wake it.")
     while True:
-        user = input("You (Enter = speak): ").strip()
-        if user.lower() in ("exit", "quit"):
-            break
-        try:
-            if user == "":
-                print("Listening for 5 seconds...")
-                reply = brain.ask_audio(record(5))
-            else:
-                reply = brain.ask(user)
-            print("FRIDAY:", reply)
-            speak(reply)
-        except Exception as e:
-            print("Error:", e)
+        listen_for_wake_word("hey_jarvis")
+        speak("Yes?")
+        print("Listening for your request...")
+        reply = brain.ask_audio(record(5))
+        print("FRIDAY:", reply)
+        speak(reply)
 
 
 main()
