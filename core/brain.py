@@ -8,7 +8,7 @@ from tools.gmail_tool import list_recent_emails, create_draft_reply
 
 load_dotenv()
 
-MODEL = "gemini-3-flash-preview"
+MODEL = "gemini-2.5-flash-lite"
 SYSTEM_PROMPT = (
     "You are FRIDAY, a personal AI assistant. Be concise and helpful. "
     "Use your tools whenever they give a more accurate answer. "
@@ -28,6 +28,7 @@ class Brain:
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
                 tools=[get_time, calculate, list_events, create_event, list_recent_emails, create_draft_reply],
+                thinking_config=types.ThinkingConfig(thinking_level="low"),
             ),
         )
 

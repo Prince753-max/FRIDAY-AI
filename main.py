@@ -3,6 +3,12 @@ from voice.ears import record
 from voice.mouth import speak
 from voice.wake import listen_for_wake_word
 
+import sys
+
+log_file = open("friday.log", "a", encoding="utf-8", buffering=1)
+sys.stdout = log_file
+sys.stderr = log_file
+
 
 def main():
     brain = Brain()
@@ -11,9 +17,13 @@ def main():
         listen_for_wake_word("hey_jarvis")
         speak("Yes?")
         print("Listening for your request...")
-        reply = brain.ask_audio(record(5))
-        print("FRIDAY:", reply)
-        speak(reply)
+        try:
+            reply = brain.ask_audio(record(4))
+            print("FRIDAY:", reply)
+            speak(reply)
+        except Exception as e:
+            print("Error:", e)
+            speak("Sorry, I ran into a problem. Please try again.")
 
 
 main()
